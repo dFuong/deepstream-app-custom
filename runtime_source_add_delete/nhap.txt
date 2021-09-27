@@ -1,0 +1,145 @@
+#define CONFIG_GROUP_SINK "sink"
+#define CONFIG_GROUP_SINK_ENABLE "enable"
+#define CONFIG_GROUP_SINK_TYPE "type"
+#define CONFIG_GROUP_SINK_CONTAINER "container"
+#define CONFIG_GROUP_SINK_CODEC "codec"
+#define CONFID_GROUP_SINK_ENC_TYPE "enc-type"
+#define CONFIG_GROUP_SINK_SYNC "sync"
+#define CONFIG_GROUP_SINK_BITRATE "bitrate"
+#define CONFIG_GROUP_SINK_PROFILE "profile"
+#define CONFID_GROUP_SINK_OUTPUT_FILE "output-file"
+#define CONFIG_GROUP_SINK_SOURCE_ID "source-id"
+
+#define CONFID_GROUP_OSD "osd"
+#define CONFID_GROUP_OSD_ENABLE "enable"
+#define CONFID_GROUP_OSD_GPU_ID "gpu-id"
+#define CONFID_GROUP_OSD_NVBUF_MEMORY_TYPE "nvbuf-memory-type"
+
+static gboolean
+set_config_sink_property (NvDsConfig *config)
+{
+  gboolean ret = FALSE;
+  GError *error = NULL;
+  gchar **keys = NULL;
+  gchar **key = NULL;
+  GKeyFile *key_file = g_key_file_new ();
+
+  // if (!g_key_file_load_from_file (key_file, cfg_file_path, G_KEY_FILE_NONE,
+  //         &error)) {
+  //   GST_CAT_ERROR (APP_CFG_PARSER_CAT, "Failed to load uri file: %s",error->message);
+  //   return FALSE;
+  // }
+
+  keys = g_key_file_get_keys(key_file, CONFIG_GROUP_SINK, NULL, &error);
+  CHECK_ERROR (error);
+
+  for (key = keys; *key; key++){
+    if (!g_strcmp0 (*key, CONFIG_GROUP_SINK_ENABLE)) {
+      gint enable = 1;
+      g_object_set(G_OBJECT(config) , "enable", enable, NULL);
+    }
+    else if (!g_strcmp0 (*key, CONFIG_GROUP_SINK_TYPE)) {
+      gint type = 3;
+      g_object_set(G_OBJECT(config) , "type", type, NULL);
+    }
+    else if (!g_strcmp0 (*key, CONFIG_GROUP_SINK_CONTAINER)) {
+      gint container = 2;
+      g_object_set(G_OBJECT(config) , "container", container, NULL);
+    }
+    else if (!g_strcmp0 (*key, CONFIG_GROUP_SINK_CODEC)) {
+      gint codec = 1;
+      g_object_set(G_OBJECT(config) , "codec", codec, NULL);
+    }
+    else if (!g_strcmp0 (*key, CONFID_GROUP_SINK_ENC_TYPE)) {
+      gint enc-type = 1;
+      g_object_set(G_OBJECT(config) , "enc-type", enc-type, NULL);
+    }
+    else if (!g_strcmp0 (*key, CONFIG_GROUP_SINK_SYNC)) {
+      gint sync = 0;
+      g_object_set(G_OBJECT(config) , "sync", sync, NULL);
+    }
+    else if (!g_strcmp0 (*key, CONFIG_GROUP_SINK_BITRATE)) {
+      gint bitrate = 4000000;
+      g_object_set(G_OBJECT(config) , "bitrate", bitrate, NULL);
+    }
+    else if (!g_strcmp0 (*key, CONFIG_GROUP_SINK_PROFILE)) {
+      gint profile = 0;
+      g_object_set(G_OBJECT(config) , "profile", profile, NULL);
+    }
+    else if (!g_strcmp0 (*key, CONFID_GROUP_SINK_OUTPUT_FILE)) {
+      char *output_file = out_file;
+      g_object_set(G_OBJECT(config), "output-file", output_file, NULL);
+    }
+     else if (!g_strcmp0 (*key, CONFIG_GROUP_SINK_SOURCE_ID)) {
+      gint id = source_id;
+      g_object_set(G_OBJECT(config), "source-id", id, NULL);   
+    }
+    else {
+      g_printerr("Unknown key '%s' for group [%s]", *key, CONFIG_GROUP_SINK);
+    }
+  }
+
+  ret = TRUE;
+done:
+  if (error) {
+    g_error_free (error);
+  }
+  if (keys) {
+    g_strfreev (keys);
+  }
+  if (!ret) {
+    g_printerr ("%s failed", __func__);
+  }
+  return ret;
+}
+
+
+static gboolean
+set_config_osd_property (NvDsConfig *config)
+{
+  gboolean ret = FALSE;
+  GError *error = NULL;
+  gchar **keys = NULL;
+  gchar **key = NULL;
+  GKeyFile *key_file = g_key_file_new ();
+
+  // if (!g_key_file_load_from_file (key_file, cfg_file_path, G_KEY_FILE_NONE,
+  //         &error)) {
+  //   GST_CAT_ERROR (APP_CFG_PARSER_CAT, "Failed to load uri file: %s",error->message);
+  //   return FALSE;
+  // }
+
+  keys = g_key_file_get_keys(key_file, CONFIG_GROUP_OSD, NULL, &error);
+  CHECK_ERROR (error);
+
+  for (key = keys; *key; key++){
+    if (!g_strcmp0 (*key, CONFIG_GROUP_SINK_ENABLE)) {
+      gint enable = 1;
+      g_object_set(G_OBJECT(config) , "enable", enable, NULL);
+    }
+    else if (!g_strcmp0 (*key, CONFIG_GROUP_OSD_GPU_ID)) {
+      gint gpu = 0;
+      g_object_set(G_OBJECT(config) , "gpu-id", gpu, NULL);
+    }
+    else if (!g_strcmp0 (*key, CONFIG_GROUP_OSD_NVBUF_MEMORY_TYPE)) {
+      gint nvbuf = 0;
+      g_object_set(G_OBJECT(config) , "nvbuf-memory-type", nvbuf, NULL);
+    }
+    else {
+      g_printerr("Unknown key '%s' for group [%s]", *key, CONFIG_GROUP_OSD);
+    }
+  }
+
+  ret = TRUE;
+done:
+  if (error) {
+    g_error_free (error);
+  }
+  if (keys) {
+    g_strfreev (keys);
+  }
+  if (!ret) {
+    g_printerr ("%s failed", __func__);
+  }
+  return ret;
+}
